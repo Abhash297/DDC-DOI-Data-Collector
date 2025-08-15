@@ -360,6 +360,7 @@
                                     <th>Countries</th>
                                     <th>DOI</th>
                                     <th>Year</th>
+                                    <th>Venue</th>
                                     <th>Citations</th>
                                     <th>Open Access</th>
                                 </tr>
@@ -567,6 +568,7 @@
                     <td>${result.all_countries || 'N/A'}</td>
                     <td><a href="${result.doi}" target="_blank">${result.doi || 'N/A'}</a></td>
                     <td>${result.publication_year || 'N/A'}</td>
+                    <td>${result.venue || 'N/A'}</td>
                     <td>${result.cited_by_count || 'N/A'}</td>
                     <td>
                         ${result.open_access ? 

@@ -102,6 +102,27 @@ def extract_keywords(publication):
 
     return keywords_list
 
+# Extract venue information from publication data
+def extract_venue_info(publication):
+    """Extract just the venue name/publication venue."""
+    host_venue = publication.get("host_venue", {})
+    primary_location = publication.get("primary_location", {})
+    
+    # Try host_venue first, then primary_location as fallback
+    venue_data = host_venue if host_venue else primary_location
+    
+    if not isinstance(venue_data, dict):
+        return None
+    
+    # Get venue name from display_name or source display_name
+    venue_name = venue_data.get("display_name")
+    if not venue_name:
+        source_info = venue_data.get("source", {})
+        if isinstance(source_info, dict):
+            venue_name = source_info.get("display_name")
+    
+    return venue_name
+
 # Country code to country name mapping
 COUNTRY_CODE_TO_NAME = {
     "US": "USA",
@@ -132,6 +153,7 @@ def extract_publication_data(publication_data):
             continue
 
         keywords_list = extract_keywords(publication)
+        venue_name = extract_venue_info(publication)
 
         all_authors = []
         all_affiliations = []
@@ -177,6 +199,7 @@ def extract_publication_data(publication_data):
             "publication_year": publication.get("publication_year", None),
             "type": publication.get("type", None),
             "language": publication.get("language", None),
+            "venue": venue_name,
             "open_access": publication.get("open_access", {}).get("is_oa", None),
             "open_access_status": publication.get("open_access", {}).get("oa_status", None),
             "open_access_url": publication.get("open_access", {}).get("oa_url", None),
@@ -217,6 +240,7 @@ def order_by_doi_sequence(df, original_dois):
                 "publication_year": "N/A",
                 "type": "N/A",
                 "language": "N/A",
+                "venue": "N/A",
                 "open_access": "N/A",
                 "open_access_status": "N/A",
                 "open_access_url": "N/A",
@@ -254,6 +278,7 @@ def order_by_doi_sequence(df, original_dois):
             "publication_year": "N/A",
             "type": "N/A",
             "language": "N/A",
+            "venue": "N/A",
             "open_access": "N/A",
             "open_access_status": "N/A",
             "open_access_url": "N/A",
@@ -359,7 +384,7 @@ def download_csv():
         column_order = [
             'id', 'title', 'display_name', 'all_authors', 'all_affiliations', 
             'all_countries', 'doi', 'publication_date', 'publication_year', 
-            'type', 'language', 'open_access', 'open_access_status', 
+            'type', 'language', 'venue', 'open_access', 'open_access_status', 
             'open_access_url', 'cited_by_count', 'keywords', 'grants'
         ]
         
@@ -395,4 +420,4 @@ def download_csv():
         return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True, host='0.0.0.0', port=5001)
