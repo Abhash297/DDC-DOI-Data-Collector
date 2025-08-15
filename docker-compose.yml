@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  ddc-app:
+    build: .
+    container_name: ddc-publication-extractor
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=production
+      - FLASK_APP=app.py
+    volumes:
+      - ./assets:/app/assets:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - ddc-network
+
+networks:
+  ddc-network:
+    driver: bridge
