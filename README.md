@@ -32,14 +32,16 @@ A modern web application that extracts comprehensive publication metadata from D
 1. **Ensure Docker and Docker Compose are installed**
 2. **Build and run with Docker Compose**:
    ```bash
-   docker-compose up --build
+   docker compose up --build -d
    ```
 
 3. **Or build and run manually**:
    ```bash
    docker build -t ddc-publication-extractor .
-   docker run -p 5000:5000 ddc-publication-extractor
+   docker run -p 8080:5000 ddc-publication-extractor
    ```
+
+**Note**: The application runs on port **8080** when using Docker to avoid conflicts with macOS AirPlay Receiver on port 5000.
 
 ## Usage
 
@@ -114,6 +116,23 @@ The application extracts the following metadata fields:
 - **Rate Limiting**: Built-in delays to respect API limits
 - **Containerization**: Docker support for easy deployment
 
+## Docker Architecture
+
+### Container Configuration
+- **Base Image**: Python 3.11-slim
+- **Working Directory**: `/app`
+- **User**: Non-root `app` user for security
+- **Port**: 5000 (internal) → 8080 (external)
+- **Health Check**: HTTP endpoint monitoring
+- **Volume Mounts**: Assets folder for logo access
+
+### Key Features
+- **Multi-stage Build**: Optimized for production
+- **Security**: Non-root user, minimal attack surface
+- **Performance**: Optimized Python dependencies
+- **Monitoring**: Built-in health checks
+- **Networking**: Proper external binding (0.0.0.0)
+
 ## Docker Benefits
 
 - **Consistent Environment**: Same runtime environment across all deployments
@@ -122,6 +141,64 @@ The application extracts the following metadata fields:
 - **Security**: Runs as non-root user with minimal attack surface
 - **Scalability**: Easy to scale horizontally with load balancers
 - **Portability**: Works identically on any platform that supports Docker
+
+## Docker Usage
+
+### Quick Start
+```bash
+# Start the application
+docker compose up --build -d
+
+# View logs
+docker compose logs -f
+
+# Stop the application
+docker compose down
+
+# Check status
+docker compose ps
+```
+
+### Access the Application
+- **URL**: `http://localhost:8080`
+- **Port**: 8080 (mapped from container port 5000)
+- **Container Name**: `ddc-publication-extractor`
+
+### Troubleshooting
+
+#### Port Conflicts
+If you get port binding errors:
+```bash
+# Check what's using port 5000
+lsof -i :5000
+
+# Kill conflicting processes
+pkill -f "python app.py"
+
+# Or use a different port in docker-compose.yml
+ports:
+  - "8081:5000"  # Change 8081 to any available port
+```
+
+#### Container Issues
+```bash
+# Rebuild and restart
+docker compose down
+docker compose up --build -d
+
+# Check container logs
+docker compose logs
+
+# Restart container
+docker compose restart
+```
+
+#### Health Check
+The container includes health monitoring:
+- **Interval**: 30 seconds
+- **Timeout**: 10 seconds
+- **Retries**: 3 attempts
+- **Start Period**: 40 seconds
 
 ## OpenAlex API
 
@@ -156,6 +233,15 @@ This project is open source and available under the MIT License.
 ## Contributing
 
 Feel free to submit issues, feature requests, or pull requests to improve the application.
+
+## Recent Updates
+
+### Docker Fixes (Latest)
+- **Fixed Flask binding** to accept external connections (0.0.0.0)
+- **Added curl** for proper health checks
+- **Updated port mapping** to 8080 to avoid macOS conflicts
+- **Improved container security** and monitoring
+- **Enhanced error handling** and troubleshooting
 
 ## Support
 
