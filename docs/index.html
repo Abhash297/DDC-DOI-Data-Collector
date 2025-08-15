@@ -494,6 +494,21 @@
                 }
             }
             
+            // Extract venue information
+            let venueName = 'N/A';
+            const hostVenue = publication.host_venue;
+            const primaryLocation = publication.primary_location;
+            
+            // Try host_venue first, then primary_location as fallback
+            const venueData = hostVenue || primaryLocation;
+            
+            if (venueData && typeof venueData === 'object') {
+                venueName = venueData.display_name;
+                if (!venueName && venueData.source) {
+                    venueName = venueData.source.display_name;
+                }
+            }
+            
             return {
                 id: publication.id || 'N/A',
                 title: publication.title || 'N/A',
@@ -506,6 +521,7 @@
                 publication_year: publication.publication_year || 'N/A',
                 type: publication.type || 'N/A',
                 language: publication.language || 'N/A',
+                venue: venueName,
                 open_access: publication.open_access?.is_oa || false,
                 open_access_status: publication.open_access?.oa_status || 'N/A',
                 open_access_url: publication.open_access?.oa_url || 'N/A',
@@ -528,6 +544,7 @@
                 publication_year: 'N/A',
                 type: 'N/A',
                 language: 'N/A',
+                venue: 'N/A',
                 open_access: false,
                 open_access_status: 'N/A',
                 open_access_url: 'N/A',
@@ -594,7 +611,7 @@
             const headers = [
                 'id', 'title', 'display_name', 'all_authors', 'all_affiliations', 
                 'all_countries', 'doi', 'publication_date', 'publication_year', 
-                'type', 'language', 'open_access', 'open_access_status', 
+                'type', 'language', 'venue', 'open_access', 'open_access_status', 
                 'open_access_url', 'cited_by_count', 'keywords', 'grants'
             ];
             
