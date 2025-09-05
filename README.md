@@ -1,6 +1,10 @@
 # Publication Metadata Extractor Web Application
 
-A modern web application that extracts comprehensive publication metadata from DOIs using the OpenAlex API. This application replicates the functionality of the original Jupyter notebook but provides a user-friendly web interface.
+A modern web application that extracts comprehensive publication metadata from DOIs using the OpenAlex API. This application replicates the functionality of the original Jupyter notebook but provides a user-friendly 
+web interface.
+
+## Available at: 
+https://abhash297.github.io/DDC-DOI-Data-Collector/
 
 ## Features
 
