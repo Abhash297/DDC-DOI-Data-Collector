@@ -335,6 +335,7 @@
                                 <tr>
                                     <th>Title</th>
                                     <th>Authors</th>
+                                    <th>ORCIDs</th>
                                     <th>Affiliations</th>
                                     <th>Countries</th>
                                     <th>DOI</th>
@@ -431,6 +432,7 @@
                 row.innerHTML = `
                     <td>${result.title || 'N/A'}</td>
                     <td>${result.all_authors || 'N/A'}</td>
+                    <td>${result.all_orcids || 'N/A'}</td>
                     <td>${result.all_affiliations || 'N/A'}</td>
                     <td>${result.all_countries || 'N/A'}</td>
                     <td><a href="${result.doi}" target="_blank">${result.doi || 'N/A'}</a></td>

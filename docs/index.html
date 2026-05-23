@@ -356,6 +356,7 @@
                                 <tr>
                                     <th>Title</th>
                                     <th>Authors</th>
+                                    <th>ORCIDs</th>
                                     <th>Affiliations</th>
                                     <th>Countries</th>
                                     <th>DOI</th>
@@ -473,14 +474,16 @@
         function extractPublicationData(publication) {
             const authorships = publication.authorships || [];
             const allAuthors = [];
+            const allOrcids = [];
             const allAffiliations = [];
             const allCountries = [];
-            
+
             for (const author of authorships) {
                 const authorName = author.author?.display_name;
                 if (authorName) {
                     allAuthors.push(authorName);
                 }
+                allOrcids.push(author.author?.orcid || '');
                 
                 const institutions = author.institutions;
                 if (institutions && institutions.length > 0) {
@@ -514,6 +517,7 @@
                 title: publication.title || 'N/A',
                 display_name: publication.display_name || 'N/A',
                 all_authors: allAuthors.join('; ') || 'N/A',
+                all_orcids: allOrcids.join('; ') || 'N/A',
                 all_affiliations: allAffiliations.join('; ') || 'N/A',
                 all_countries: allCountries.join('; ') || 'N/A',
                 doi: publication.doi || 'N/A',
@@ -537,6 +541,7 @@
                 title: 'N/A',
                 display_name: 'N/A',
                 all_authors: 'N/A',
+                all_orcids: 'N/A',
                 all_affiliations: 'N/A',
                 all_countries: 'N/A',
                 doi: `https://doi.org/${doi}`,
@@ -581,6 +586,7 @@
                 row.innerHTML = `
                     <td>${result.title || 'N/A'}</td>
                     <td>${result.all_authors || 'N/A'}</td>
+                    <td>${result.all_orcids || 'N/A'}</td>
                     <td>${result.all_affiliations || 'N/A'}</td>
                     <td>${result.all_countries || 'N/A'}</td>
                     <td><a href="${result.doi}" target="_blank">${result.doi || 'N/A'}</a></td>
@@ -609,9 +615,9 @@
             
             // Create CSV content
             const headers = [
-                'id', 'title', 'display_name', 'all_authors', 'all_affiliations', 
-                'all_countries', 'doi', 'publication_date', 'publication_year', 
-                'type', 'language', 'venue', 'open_access', 'open_access_status', 
+                'id', 'title', 'display_name', 'all_authors', 'all_orcids', 'all_affiliations',
+                'all_countries', 'doi', 'publication_date', 'publication_year',
+                'type', 'language', 'venue', 'open_access', 'open_access_status',
                 'open_access_url', 'cited_by_count', 'keywords', 'grants'
             ];
             

@@ -158,11 +158,15 @@ def extract_publication_data(publication_data):
         all_authors = []
         all_affiliations = []
         all_countries = []
+        all_orcids = []
 
         for author in authorships:
-            author_name = author.get("author", {}).get("display_name", None)
+            author_info = author.get("author", {})
+            author_name = author_info.get("display_name", None)
             if author_name:
                 all_authors.append(author_name)
+            orcid = author_info.get("orcid", "") or ""
+            all_orcids.append(orcid)
 
             author_affiliation = ""
             author_country = ""
@@ -192,6 +196,7 @@ def extract_publication_data(publication_data):
             "title": publication.get("title", None),
             "display_name": publication.get("display_name", None),
             "all_authors": "; ".join(all_authors) if all_authors else "",
+            "all_orcids": "; ".join(all_orcids) if all_orcids else "",
             "all_affiliations": "; ".join(all_affiliations) if all_affiliations else "",
             "all_countries": "; ".join(all_countries) if all_countries else "",
             "doi": publication.get("doi", None),
@@ -233,6 +238,7 @@ def order_by_doi_sequence(df, original_dois):
                 "title": "N/A",
                 "display_name": "N/A",
                 "all_authors": "N/A",
+                "all_orcids": "N/A",
                 "all_affiliations": "N/A",
                 "all_countries": "N/A",
                 "doi": f"https://doi.org/{doi}",
@@ -271,6 +277,7 @@ def order_by_doi_sequence(df, original_dois):
             "title": "N/A",
             "display_name": "N/A",
             "all_authors": "N/A",
+            "all_orcids": "N/A",
             "all_affiliations": "N/A",
             "all_countries": "N/A",
             "doi": f"https://doi.org/{doi}",
@@ -382,9 +389,9 @@ def download_csv():
         
         # Ensure exact column order matching the original CSV format
         column_order = [
-            'id', 'title', 'display_name', 'all_authors', 'all_affiliations', 
-            'all_countries', 'doi', 'publication_date', 'publication_year', 
-            'type', 'language', 'venue', 'open_access', 'open_access_status', 
+            'id', 'title', 'display_name', 'all_authors', 'all_orcids', 'all_affiliations',
+            'all_countries', 'doi', 'publication_date', 'publication_year',
+            'type', 'language', 'venue', 'open_access', 'open_access_status',
             'open_access_url', 'cited_by_count', 'keywords', 'grants'
         ]
         
